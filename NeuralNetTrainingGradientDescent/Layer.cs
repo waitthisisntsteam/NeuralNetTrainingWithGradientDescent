@@ -11,7 +11,7 @@ namespace NeuralNetTrainingGradientDescent
         public Neuron[] Neurons { get; }
         public double[] Outputs { get; }
 
-        public Layer(ActivationFunction activation, ErrorFunction error, int neuronCount, Layer? previousLayer)
+        public Layer(ActivationFunction activation, int neuronCount, Layer? previousLayer)
         {
             Neurons = new Neuron[neuronCount];
             Outputs = new double[neuronCount];
@@ -20,11 +20,11 @@ namespace NeuralNetTrainingGradientDescent
             {
                 if (previousLayer != null)
                 {
-                    Neurons[i] = new Neuron(activation, error, previousLayer.Neurons);
+                    Neurons[i] = new Neuron(activation, previousLayer.Neurons);
                 }
                 else
                 {
-                    Neurons[i] = new Neuron(activation, error, null);
+                    Neurons[i] = new Neuron(activation, null);
                 }
                 Outputs[i] = Neurons[i].Compute();
             }

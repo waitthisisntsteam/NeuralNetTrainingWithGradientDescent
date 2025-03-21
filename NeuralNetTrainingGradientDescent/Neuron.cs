@@ -20,7 +20,7 @@ namespace NeuralNetTrainingGradientDescent
         public double Delta { get; set; }
         public double BiasUpdate;
 
-        public Neuron(ActivationFunction activation, ErrorFunction error, Neuron?[] previousNeurons)
+        public Neuron(ActivationFunction activation, Neuron?[] previousNeurons)
         {
             Activation = activation;
 
@@ -82,18 +82,20 @@ namespace NeuralNetTrainingGradientDescent
 
         public void Backprop(double learningRate)
         {
-            double weightedInput = Compute(); //not passing in right
-            double aPrimeZ = Activation.DerivativeFunc(Bias + weightedInput); //not passing in right
+            double weightedInput = Compute();
+            double aPrimeZ = Activation.DerivativeFunc(weightedInput);
 
-            double biasPartialDerivative = aPrimeZ;
+            double biasPartialDerivative = Delta * aPrimeZ;
             BiasUpdate += learningRate * -biasPartialDerivative;
 
             for (int i = 0; i < Dendrites.Length; i++)
             {
-                Dendrites[i].Previous.Delta += aPrimeZ * Dendrites[i].Weight;
+                Dendrites[i].Previous.Delta += Delta * aPrimeZ * Dendrites[i].Weight;
 
-                double weightPartialDerivative = aPrimeZ * Dendrites[i].Compute();
-                Dendrites[i].WeightUpdate += Delta * learningRate * -weightPartialDerivative;
+                double weightPartialDerivative = Delta * aPrimeZ * Dendrites[i].Compute();
+                Dendrites[i].WeightUpdate += learningRate * -weightPartialDerivative;
+
+                Delta = 0;
             }
         }
     }
