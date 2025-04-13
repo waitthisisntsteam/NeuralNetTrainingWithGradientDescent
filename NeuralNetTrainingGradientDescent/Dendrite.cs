@@ -13,6 +13,7 @@ namespace NeuralNetTrainingGradientDescent
         public double Weight { get; set; }
 
         public double WeightUpdate { get; set; }
+        public double PreviousWeightUpdate { get; set; }
 
         public Dendrite(Neuron next, Neuron previous, double weight) => (Next, Previous, Weight) = (next, previous, weight);
 
@@ -21,9 +22,11 @@ namespace NeuralNetTrainingGradientDescent
             return Previous.Output * Weight;
         }
 
-        public void ApplyUpdates()
+        public void ApplyUpdates(double momentum)
         {
+            WeightUpdate += PreviousWeightUpdate * momentum;
             Weight += WeightUpdate;
+            PreviousWeightUpdate = WeightUpdate;
             WeightUpdate = 0;
         }
     }

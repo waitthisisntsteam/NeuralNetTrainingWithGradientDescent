@@ -14,6 +14,9 @@ namespace NeuralNetTrainingGradientDescent
             network.Randomize(new Random(), -1, 1);
 
             const int portions = 16;
+            const double learningRate = 0.001;
+            const double momentum = 0.01;
+
             double[][] desiredOutputs = new double[portions][];
             double[][] inputs = new double[portions][];
 
@@ -24,7 +27,7 @@ namespace NeuralNetTrainingGradientDescent
                 desiredOutputs[i] = [Math.Sin(inputs[i][0])];
             }
 
-            double error = network.Train(inputs, desiredOutputs, 0.0005);
+            double error = network.Train(inputs, desiredOutputs, learningRate, momentum);
             double originalError = error;
             double oldError = originalError;
             while (true)
@@ -34,7 +37,7 @@ namespace NeuralNetTrainingGradientDescent
                 Console.WriteLine("      ");
 
                 Console.WriteLine("Current Error:");
-                error = network.Train(inputs, desiredOutputs, 0.0005);
+                error = network.Train(inputs, desiredOutputs, learningRate, momentum);
                 Console.Write(error);
                 Console.WriteLine();
 

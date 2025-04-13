@@ -19,6 +19,7 @@ namespace NeuralNetTrainingGradientDescent
 
         public double Delta { get; set; }
         public double BiasUpdate;
+        public double PreviousBiasUpdate;
 
         public Neuron(ActivationFunction activation, Neuron?[] previousNeurons)
         {
@@ -62,14 +63,16 @@ namespace NeuralNetTrainingGradientDescent
             return Output;
 
         }
-        public void ApplyUpdates()
+        public void ApplyUpdates(double momentum)
         {
+            BiasUpdate += PreviousBiasUpdate * momentum;
             Bias += BiasUpdate;
+            PreviousBiasUpdate = BiasUpdate;
             BiasUpdate = 0;
 
             for (int i = 0; i < Dendrites.Length; i++)
             {
-                Dendrites[i].ApplyUpdates();
+                Dendrites[i].ApplyUpdates(momentum);
             }
         }
 

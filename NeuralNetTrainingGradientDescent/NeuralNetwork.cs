@@ -62,11 +62,11 @@ namespace NeuralNetTrainingGradientDescent
             return errorSum;
         }
 
-        public void ApplyUpdates()
+        public void ApplyUpdates(double momentum)
         {
             for (int i = 1; i < Layers.Length; i++)
             {
-                Layers[i].ApplyUpdates();
+                Layers[i].ApplyUpdates(momentum);
             }
         }
 
@@ -85,16 +85,16 @@ namespace NeuralNetTrainingGradientDescent
             }
         }
 
-        public double Train(double[][] inputs, double[][] desiredOutputs, double learingRate)
+        public double Train(double[][] inputs, double[][] desiredOutputs, double learningRate, double momentum)
         {
             double totalError = 0;
 
             for (int i = 0; i < inputs.Length; i++)
             {
                 totalError += GetError(inputs[i], desiredOutputs[i]);
-                Backprop(learingRate, desiredOutputs[i]);
+                Backprop(learningRate, desiredOutputs[i]);
             }
-            ApplyUpdates();
+            ApplyUpdates(momentum);
 
             return totalError / inputs.Length;
         }
