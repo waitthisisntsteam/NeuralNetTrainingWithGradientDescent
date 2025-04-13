@@ -8,18 +8,18 @@ namespace NeuralNetTrainingGradientDescent
         {
             ActivationErorrFormulas activationErorrFormulas = new ActivationErorrFormulas();
             ErrorFunction Error = new ErrorFunction(activationErorrFormulas.MeanSquared, activationErorrFormulas.MeanSquaredD);
-            ActivationFunction Activation = new ActivationFunction(activationErorrFormulas.Sigmoid, activationErorrFormulas.Sigmoid);
+            ActivationFunction Activation = new ActivationFunction(activationErorrFormulas.TanH, activationErorrFormulas.TanHD);
 
             NeuralNetwork network = new NeuralNetwork([Activation], Error, 1, 5, 5, 5, 5, 1);
-            network.Randomize(new Random(), 0.25, 0.75);
+            network.Randomize(new Random(), -1, 1);
 
-            const int number = 16;
-            double[][] desiredOutputs = new double[number][];
-            double[][] inputs = new double[number][];
+            const int portions = 16;
+            double[][] desiredOutputs = new double[portions][];
+            double[][] inputs = new double[portions][];
 
-            for (int i = 0; i < number; i++)
+            for (int i = 0; i < portions; i++)
             {
-                inputs[i] = [(Math.PI / number) * i];
+                inputs[i] = [Math.PI / portions * i];
 
                 desiredOutputs[i] = [Math.Sin(inputs[i][0])];
             }
@@ -33,23 +33,25 @@ namespace NeuralNetTrainingGradientDescent
                 Console.WriteLine(originalError);
                 Console.WriteLine("      ");
 
-                Console.WriteLine("Current Error:      Current Outputs:");
+                Console.WriteLine("Current Error:");
                 error = network.Train(inputs, desiredOutputs, 0.0005);
                 Console.Write(error);
+                Console.WriteLine();
 
-                Console.Write("                   ");
+                Console.WriteLine("Current Outputs:");
                 for (int i = 0; i < inputs.Length; i++)
                 {
                     var output = network.Compute(inputs[i]);
-                    for (int j = 0; j < output.Length; j++) Console.Write(output[j] + " ");
+
+                    for (int j = 0; j < output.Length; j++)
+                    {
+                        Console.Write(desiredOutputs[i][0] + "       ");
+                        Console.Write(output[j]);
+                        Console.WriteLine();
+                    }
                 }
 
-                if (oldError < error)
-                {
-                    ;//you goofed
-                }
                 oldError = error;
-                //Console.ReadKey();
                 Console.Clear();
             }
         }

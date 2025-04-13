@@ -41,12 +41,12 @@ namespace NeuralNetTrainingGradientDescent
             {
                 Layers[0].Neurons[i].Output = inputs[i];
             }
-            for (int i = 1; i < Layers.Length - 1; i++)
+            for (int i = 1; i < Layers.Length; i++)
             {
                 Layers[i].Compute();
             }
 
-            return Layers[^1].Compute();
+            return Layers[^1].Outputs;
         }
 
         public double GetError(double[] inputs, double[] desiredOutputs)
@@ -64,7 +64,7 @@ namespace NeuralNetTrainingGradientDescent
 
         public void ApplyUpdates()
         {
-            for (int i = 0; i < Layers.Length; i++)
+            for (int i = 1; i < Layers.Length; i++)
             {
                 Layers[i].ApplyUpdates();
             }
@@ -74,39 +74,29 @@ namespace NeuralNetTrainingGradientDescent
         {
             for (int i = 0; i < Layers[^1].Neurons.Length; i++)
             {
-                Layers[^1].Neurons[i].Compute();
                 double ePrimeOD = Error.DerivativeFunc(Layers[^1].Neurons[i].Output, desiredOutputs[i]);
 
-                Layers[^1].Neurons[i].Delta = ePrimeOD;
-                for (int j = 0; j < Layers[^1].Neurons[i].Dendrites.Length; j++)
-                {
-                    Layers[^1].Neurons[i].Dendrites[j].Previous.Delta = ePrimeOD;
-                }
+                Layers[^1].Neurons[i].Delta += ePrimeOD;
             }
 
-            for (int i = Layers.Length - 2; i > 0; i--)
+            for (int i = Layers.Length - 1; i > 0; i--)
             {
                 Layers[i].Backprop(learningRate);
-
-                ;
             }
         }
 
         public double Train(double[][] inputs, double[][] desiredOutputs, double learingRate)
         {
             double totalError = 0;
-            int errorCounts = 0;
 
             for (int i = 0; i < inputs.Length; i++)
             {
                 totalError += GetError(inputs[i], desiredOutputs[i]);
-                errorCounts++;
-
                 Backprop(learingRate, desiredOutputs[i]);
             }
             ApplyUpdates();
 
-            return totalError / errorCounts;
+            return totalError / inputs.Length;
         }
     }
 }

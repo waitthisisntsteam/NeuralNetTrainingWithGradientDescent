@@ -16,7 +16,10 @@ namespace NeuralNetTrainingGradientDescent
 
         public Dendrite(Neuron next, Neuron previous, double weight) => (Next, Previous, Weight) = (next, previous, weight);
 
-        public double Compute() => Previous.Output * Weight;
+        public double Compute() 
+        {
+            return Previous.Output * Weight;
+        }
 
         public void ApplyUpdates()
         {

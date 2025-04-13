@@ -13,8 +13,10 @@ namespace NeuralNetTrainingGradientDescent
         public double SigmoidD(double input) => Sigmoid(input) * (1 - Sigmoid(input));
 
         public double TanH(double input) => Math.Tanh(input);
-
         public double TanHD(double input) => 1 - Math.Pow(TanH(input), 2);
+
+        public double ReLU(double input) => input <= 0 ? 0 : input;
+        public double ReLUD(double input) => input <= 0 ? 0 : 1;
 
         // Error Functions
         public double MeanSquared(double input, double desiredOutput) => Math.Pow(desiredOutput - input, 2);

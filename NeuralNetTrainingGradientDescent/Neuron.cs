@@ -54,17 +54,14 @@ namespace NeuralNetTrainingGradientDescent
         public double Compute()
         {
             Input = Bias;
-            if (Dendrites != null)
+            for (int i = 0; i < Dendrites.Length; i++)
             {
-                for (int i = 0; i < Dendrites.Length; i++)
-                {
-                    Input += Dendrites[i].Compute();
-                }
+                Input += Dendrites[i].Compute();
             }
             Output = Activation.FunctionFunc(Input);
             return Output;
-        }
 
+        }
         public void ApplyUpdates()
         {
             Bias += BiasUpdate;
@@ -78,27 +75,19 @@ namespace NeuralNetTrainingGradientDescent
 
         public void Backprop(double learningRate)
         {
-            double weightedInput = Compute();
-            double aPrimeZ = Activation.DerivativeFunc(weightedInput);
+            double aPrimeZ = Activation.DerivativeFunc(Input);
 
-            double biasPartialDerivative = Delta * aPrimeZ;
-            BiasUpdate += learningRate * -biasPartialDerivative;
-            if (BiasUpdate == 0)
-            {
-                ;
-            }
             for (int i = 0; i < Dendrites.Length; i++)
             {
                 Dendrites[i].Previous.Delta += Delta * aPrimeZ * Dendrites[i].Weight;
 
-                double weightPartialDerivative = Delta * aPrimeZ * Dendrites[i].Previous.Compute();
+                double weightPartialDerivative = Delta * aPrimeZ * Dendrites[i].Previous.Output;
                 Dendrites[i].WeightUpdate += learningRate * -weightPartialDerivative;
-
-                if (Dendrites[i].WeightUpdate == 0)
-                {
-                    ;
-                }
             }
+
+            double biasPartialDerivative = Delta * aPrimeZ;
+            BiasUpdate += learningRate * -biasPartialDerivative;
+
             Delta = 0;
         }
     }

@@ -44,7 +44,6 @@ namespace NeuralNetTrainingGradientDescent
             {
                 Outputs[i] = Neurons[i].Compute();
             }
-
             return Outputs;
         }
 
