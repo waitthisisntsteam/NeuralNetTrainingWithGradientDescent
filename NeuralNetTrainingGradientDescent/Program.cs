@@ -16,6 +16,7 @@ namespace NeuralNetTrainingGradientDescent
             const int portions = 16;
             const double learningRate = 0.001;
             const double momentum = 0.01;
+            const int batchSize = 5;
 
             double[][] desiredOutputs = new double[portions][];
             double[][] inputs = new double[portions][];
@@ -27,7 +28,7 @@ namespace NeuralNetTrainingGradientDescent
                 desiredOutputs[i] = [Math.Sin(inputs[i][0])];
             }
 
-            double error = network.Train(inputs, desiredOutputs, learningRate, momentum);
+            double error = network.BatchTrain(inputs, desiredOutputs, batchSize, learningRate, momentum);
             double originalError = error;
             double oldError = originalError;
             while (true)
@@ -37,7 +38,7 @@ namespace NeuralNetTrainingGradientDescent
                 Console.WriteLine("      ");
 
                 Console.WriteLine("Current Error:");
-                error = network.Train(inputs, desiredOutputs, learningRate, momentum);
+                error = network.BatchTrain(inputs, desiredOutputs, batchSize, learningRate, momentum);
                 Console.Write(error);
                 Console.WriteLine();
 

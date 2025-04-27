@@ -98,5 +98,23 @@ namespace NeuralNetTrainingGradientDescent
 
             return totalError / inputs.Length;
         }
+
+        public double BatchTrain(double[][] inputs, double[][] desiredOutputs, int batchSize, double learningRate, double momentum)
+        {
+            double totalError = 0;
+
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                if (i != 0 && i % batchSize == 0)
+                {
+                    ApplyUpdates(momentum);
+                }
+
+                totalError += GetError(inputs[i], desiredOutputs[i]);
+                Backprop(learningRate, desiredOutputs[i]);
+            }
+
+            return totalError / inputs.Length;
+        }
     }
 }
